@@ -1,0 +1,2 @@
+/Users/dignitestudios/StudioProjects/Secondshot_frontend/android/app/.cxx/RelWithDebInfo/3w1a2j1a/armeabi-v7a/CMakeFiles/edit_cache.dir
+/Users/dignitestudios/StudioProjects/Secondshot_frontend/android/app/.cxx/RelWithDebInfo/3w1a2j1a/armeabi-v7a/CMakeFiles/rebuild_cache.dir

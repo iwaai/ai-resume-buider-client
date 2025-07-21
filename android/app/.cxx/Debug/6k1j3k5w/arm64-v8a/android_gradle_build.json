@@ -1,0 +1,28 @@
+{
+  "buildFiles": [
+    "/Users/dignitestudios/Development/flutter/packages/flutter_tools/gradle/src/main/groovy/CMakeLists.txt"
+  ],
+  "cleanCommandsComponents": [
+    [
+      "/Users/dignitestudios/Library/Android/sdk/cmake/3.22.1/bin/ninja",
+      "-C",
+      "/Users/dignitestudios/StudioProjects/Secondshot_frontend/android/app/.cxx/Debug/6k1j3k5w/arm64-v8a",
+      "clean"
+    ]
+  ],
+  "buildTargetsCommandComponents": [
+    "/Users/dignitestudios/Library/Android/sdk/cmake/3.22.1/bin/ninja",
+    "-C",
+    "/Users/dignitestudios/StudioProjects/Secondshot_frontend/android/app/.cxx/Debug/6k1j3k5w/arm64-v8a",
+    "{LIST_OF_TARGETS_TO_BUILD}"
+  ],
+  "libraries": {},
+  "toolchains": {
+    "toolchain": {
+      "cCompilerExecutable": "/Users/dignitestudios/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang.lld",
+      "cppCompilerExecutable": "/Users/dignitestudios/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang++.lld"
+    }
+  },
+  "cFileExtensions": [],
+  "cppFileExtensions": []
+}

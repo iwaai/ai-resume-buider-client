@@ -1,0 +1,2 @@
+/Users/dignitestudios/StudioProjects/Secondshot_frontend/android/app/.cxx/Debug/6k1j3k5w/x86_64/CMakeFiles/edit_cache.dir
+/Users/dignitestudios/StudioProjects/Secondshot_frontend/android/app/.cxx/Debug/6k1j3k5w/x86_64/CMakeFiles/rebuild_cache.dir

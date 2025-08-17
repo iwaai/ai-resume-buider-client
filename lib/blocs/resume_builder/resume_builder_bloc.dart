@@ -85,28 +85,34 @@ class ResumeBloc extends Bloc<ResumeEvent, ResumeState> {
     }
   }
 
-  Future<void> _onGeneratePDF(
-    GeneratePDFEvent event,
-    Emitter<ResumeState> emit,
-  ) async {
-    try {
-      if (state is! ResumeDataExtracted) return;
+ Future<void> _onGeneratePDF(
+  GeneratePDFEvent event,
+  Emitter<ResumeState> emit,
+) async {
+  try {
+    // Check if current state is correct type
+    if (state is! ResumeDataExtracted) return;
 
-      emit(ResumeLoading());
+    // Store the current state data BEFORE emitting loading
+    final currentState = state as ResumeDataExtracted;
+    
+    // Now emit loading state
+    emit(ResumeLoading());
 
-      final currentState = state as ResumeDataExtracted;
-      final pdfFile =
-          await _pdfService.generateResumePDF(currentState.resumeData);
+    // Generate PDF using the stored state data
+    final pdfFile = await _pdfService.generateResumePDF(currentState.resumeData);
 
-      emit(PDFGenerated(
-        imageFile: currentState.imageFile,
-        resumeData: currentState.resumeData,
-        pdfFile: pdfFile,
-      ));
-    } catch (e) {
-      emit(ResumeError(message: 'Failed to generate PDF: $e'));
-    }
+    // Emit success state
+    emit(PDFGenerated(
+      imageFile: currentState.imageFile,
+      resumeData: currentState.resumeData,
+      pdfFile: pdfFile,
+    ));
+  } catch (e) {
+    print('Error generating PDF: $e');
+    emit(ResumeError(message: 'Failed to generate PDF: $e'));
   }
+}
 
   void _onReset(ResetEvent event, Emitter<ResumeState> emit) {
     emit(ResumeInitial());

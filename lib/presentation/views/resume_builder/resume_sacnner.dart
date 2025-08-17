@@ -6,6 +6,7 @@ import 'package:second_shot/blocs/resume_builder/resume_builder_event.dart';
 import 'package:second_shot/blocs/resume_builder/resume_builder_state.dart';
 import 'package:second_shot/models/resume_data_model.dart';
 import 'package:second_shot/presentation/components/resume_preview_widget.dart';
+import 'package:open_file/open_file.dart';
 
 class ResumeScannerScreen extends StatelessWidget {
   const ResumeScannerScreen({Key? key}) : super(key: key);
@@ -223,60 +224,102 @@ class ResumeScannerScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildPDFGeneratedView(
-    BuildContext context,
-    File imageFile,
-    ResumeData resumeData,
-    File pdfFile,
-  ) {
-    return Column(
-      children: [
-        Expanded(
-          child: ResumePreviewWidget(resumeData: resumeData),
-        ),
-        Container(
-          padding: const EdgeInsets.all(16),
-          color: Colors.green.shade50,
-          child: Column(
-            children: [
-              const Row(
-                children: [
-                  Icon(Icons.check_circle, color: Colors.green),
-                  SizedBox(width: 8),
-                  Text(
-                    'PDF Generated Successfully!',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.green,
+Widget _buildPDFGeneratedView(
+  BuildContext context,
+  File imageFile,
+  ResumeData resumeData,
+  File pdfFile,
+) {
+  return Column(
+    children: [
+      Expanded(
+        child: ResumePreviewWidget(resumeData: resumeData),
+      ),
+      Container(
+        padding: const EdgeInsets.all(16),
+        color: Colors.green.shade50,
+        child: Column(
+          children: [
+            const Row(
+              children: [
+                Icon(Icons.check_circle, color: Colors.green),
+                SizedBox(width: 8),
+                Text(
+                  'PDF Generated Successfully!',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.green,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Saved to: ${pdfFile.path}',
+              style: TextStyle(
+                fontSize: 12,
+                color: Colors.grey[600],
+              ),
+            ),
+            const SizedBox(height: 16),
+            // Updated button section with two buttons
+            Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton.icon(
+                    onPressed: () async {
+                      try {
+                        final result = await OpenFile.open(pdfFile.path);
+                        if (result.type != ResultType.done) {
+                          if (context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Could not open PDF: ${result.message}'),
+                                backgroundColor: Colors.orange,
+                              ),
+                            );
+                          }
+                        }
+                      } catch (e) {
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Error opening PDF: $e'),
+                              backgroundColor: Colors.red,
+                            ),
+                          );
+                        }
+                      }
+                    },
+                    icon: const Icon(Icons.open_in_new),
+                    label: const Text('Open PDF'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.orange,
+                      foregroundColor: Colors.white,
                     ),
                   ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'Saved to: ${pdfFile.path}',
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.grey[600],
                 ),
-              ),
-              const SizedBox(height: 16),
-              ElevatedButton.icon(
-                onPressed: () {
-                  context.read<ResumeBloc>().add(ResetEvent());
-                },
-                icon: const Icon(Icons.add),
-                label: const Text('Scan Another Resume'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue,
-                  foregroundColor: Colors.white,
+                const SizedBox(width: 12),
+                Expanded(
+                  child: ElevatedButton.icon(
+                    onPressed: () {
+                      context.read<ResumeBloc>().add(ResetEvent());
+                    },
+                    icon: const Icon(Icons.add),
+                    label: const Text('Scan Another'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue,
+                      foregroundColor: Colors.white,
+                    ),
+                  ),
                 ),
-              ),
-            ],
-          ),
+              ],
+            ),
+          ],
         ),
-      ],
-    );
-  }
+      ),
+    ],
+  );
+}
 }

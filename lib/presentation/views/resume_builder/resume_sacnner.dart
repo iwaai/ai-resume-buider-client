@@ -7,6 +7,7 @@ import 'package:second_shot/blocs/resume_builder/resume_builder_state.dart';
 import 'package:second_shot/models/resume_data_model.dart';
 import 'package:second_shot/presentation/components/resume_preview_widget.dart';
 import 'package:open_file/open_file.dart';
+import 'package:second_shot/presentation/views/resume_builder/template_selection_screen.dart';
 
 class ResumeScannerScreen extends StatelessWidget {
   const ResumeScannerScreen({Key? key}) : super(key: key);
@@ -14,10 +15,37 @@ class ResumeScannerScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      appBar:  AppBar(
         title: const Text('Resume Scanner'),
         backgroundColor: Colors.blue,
         foregroundColor: Colors.white,
+        actions: [
+          // Templates button - only show when data is extracted
+          BlocBuilder<ResumeBloc, ResumeState>(
+            builder: (context, state) {
+              if (state is ResumeDataExtracted) {
+                return TextButton.icon(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => TemplateSelectionScreen(
+                          resumeData: state.resumeData,
+                        ),
+                      ),
+                    );
+                  },
+                  icon: const Icon(Icons.palette, color: Colors.white),
+                  label: const Text(
+                    'Templates',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                );
+              }
+              return const SizedBox();
+            },
+          ),
+        ],
       ),
       body: BlocConsumer<ResumeBloc, ResumeState>(
         listener: (context, state) {

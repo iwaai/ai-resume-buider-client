@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:equatable/equatable.dart';
+import 'package:second_shot/models/resume_template.dart';
 
 abstract class ResumeEvent extends Equatable {
   const ResumeEvent();
@@ -20,5 +21,15 @@ class ProcessImageEvent extends ResumeEvent {
 }
 
 class GeneratePDFEvent extends ResumeEvent {}
+
+
+class GenerateTemplatedPDFEvent extends ResumeEvent {
+  final ResumeTemplate template;
+
+  const GenerateTemplatedPDFEvent({required this.template});
+
+  @override
+  List<Object> get props => [template];
+}
 
 class ResetEvent extends ResumeEvent {}

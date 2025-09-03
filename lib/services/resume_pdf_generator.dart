@@ -1,6 +1,5 @@
 import 'dart:io';
 
-// import 'package:docx_template/docx_template.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -14,14 +13,23 @@ import '../utils/constants/constant.dart';
 Future<File?> generateAndDownloadPdf(ResumeModel model,
     {bool isEmail = false}) async {
   final pdf = pw.Document();
-  final timesFont =
-      pw.Font.ttf(await rootBundle.load('assets/fonts/times.ttf'));
+  
+  // Load font with proper error handling
+  pw.Font? customFont;
+  try {
+    customFont = pw.Font.ttf(await rootBundle.load('assets/fonts/times.ttf'));
+  } catch (e) {
+    print('Could not load custom font, using default font: $e');
+    // customFont will remain null and pdf will use default font
+  }
 
   pdf.addPage(
     pw.MultiPage(
       pageFormat: PdfPageFormat.a4,
       margin: const pw.EdgeInsets.all(20),
-      theme: pw.ThemeData.withFont(base: timesFont),
+      theme: customFont != null 
+          ? pw.ThemeData.withFont(base: customFont)
+          : pw.ThemeData(), // Use default theme if custom font fails
       build: (pw.Context context) => [
         _buildHeader(model.fullName ?? "", model.email ?? "", model.phone ?? "",
             model.address ?? ""),
@@ -101,7 +109,8 @@ Future<File?> _saveAndDownloadPdf(pw.Document pdf, bool isEmail) async {
       await file.writeAsBytes(await pdf.save());
       print('PDF saved at $filePath');
 
-      return isEmail ? file : null;
+      // Return the file if isEmail is true OR always return it for UI purposes
+      return file; // Always return the file so UI can show success
     }
   } catch (e) {
     print('Error while saving PDF: $e');
